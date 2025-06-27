@@ -30,6 +30,7 @@ document.querySelector("#nextWordSendButton").onclick = async (_event) => {
     if (response.status !== 200) {
         const errorJson = await response.text();
         const errorObj = JSON.parse(errorJson);
+        alert(errorObj["errorMessage"]);
         if (response.status === 401) {
             //ゲームオーバー
             globalThis.location.href = "gameOver.html";
@@ -44,4 +45,5 @@ document.querySelector("#nextWordSendButton").onclick = async (_event) => {
     paragraph.innerHTML = `前の単語: ${previousWord}`;
     // inputタグの中身を消去する
     nextWordInput.value = "";
+    wordHistories.push = previousWord;
 };
