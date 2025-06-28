@@ -47,7 +47,7 @@ Deno.serve(async (_req) => {
                         "errorCode": "10003",
                     }),
                     {
-                        status: 401,
+                        status: 402,
                         headers: {
                             "Content-Type": "application/json; charset=utf-8",
                         },
@@ -78,6 +78,16 @@ Deno.serve(async (_req) => {
         // 現在の単語を返す
         return new Response(previousWord);
     }
+
+    // POST /reset: リセットする
+    if (_req.method === "POST" && pathname === "/reset") {
+        console.log("reset");
+        wordHistories = [];
+        previousWord = "しりとり";
+        wordHistories = wordHistories.concat(previousWord);
+        return wordHistories;
+    }
+
     // ./public以下のファイルを公開
     return serveDir(
         _req,

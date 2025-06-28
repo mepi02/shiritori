@@ -31,7 +31,7 @@ document.querySelector("#nextWordSendButton").onclick = async (_event) => {
         const errorJson = await response.text();
         const errorObj = JSON.parse(errorJson);
         alert(errorObj["errorMessage"]);
-        if (response.status === 401) {
+        if (response.status >= 401) {
             //ゲームオーバー
             globalThis.location.href = "gameOver.html";
         }
@@ -46,4 +46,17 @@ document.querySelector("#nextWordSendButton").onclick = async (_event) => {
     // inputタグの中身を消去する
     nextWordInput.value = "";
     wordHistories.push = previousWord;
+};
+
+// 送信ボタンの押下時に実行
+document.querySelector("#resetSendButton").onclick = async (event) => {
+    const response_reset = await fetch(
+        "/reset",
+        {
+            method: "POST",
+        },
+    );
+    globalThis.location.reload();
+    // POST /resetを実行
+    // ページをリロードする
 };
