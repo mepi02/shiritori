@@ -5,6 +5,8 @@ let previousWord = "しりとり";
 let wordHistories = [];
 wordHistories = wordHistories.concat(previousWord);
 
+let gameOver_messege;
+
 // localhostにDenoのHTTPサーバーを展開
 Deno.serve(async (_req) => {
     // パス名を取得する
@@ -14,6 +16,14 @@ Deno.serve(async (_req) => {
     // GET /shiritori: 直前の単語を返す
     if (_req.method === "GET" && pathname === "/shiritori") {
         return new Response(previousWord);
+    }
+
+    if (_req.method === "GET" && pathname === "/gameOver_messege") {
+        if (gameOver_messege === 401) {
+            return new Response("んがついてるよ");
+        } else if (gameOver_messege === 402) {
+            return new Response("同じ文字が使用されています");
+        }
     }
 
     // POST /shiritori: 次の単語を受け取って保存する
@@ -28,6 +38,7 @@ Deno.serve(async (_req) => {
         console.log(wordHistories);
         if (previousWord.slice(-1) === nextWord.slice(0, 1)) {
             if (nextWord.slice(-1) === "ん") {
+                gameOver_messege = 401;
                 return new Response(
                     JSON.stringify({
                         "errorMessage": "最後がんになっています",
@@ -41,6 +52,7 @@ Deno.serve(async (_req) => {
                     },
                 );
             } else if (0 < wordHistories.indexOf(nextWord)) {
+                gameOver_messege = 402;
                 return new Response(
                     JSON.stringify({
                         "errorMessage": "同じものを出しています",
