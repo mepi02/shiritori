@@ -1,14 +1,13 @@
-let gameOver_messege = "しりとり";
-
+//終わった理由を表示
 globalThis.onload = async (_event) => {
-    // id: previousWordのタグを取得
     const paragraph = document.querySelector("#gameOver_reason");
-    const gameOver_check = await fetch("/gameOver_messege", { method: "GET" });
-    const previousWord = await gameOver_check.text();
+    const gameOver_status = await fetch("/gameOver_status", { method: "GET" });
+    const gameOver_Message = await gameOver_status.text();
     // 取得したタグの中身を書き換える
-    paragraph.innerHTML = `${previousWord}`;
+    paragraph.innerHTML = `${gameOver_Message}`;
 };
 
+//スタート画面にリセットした状態で遷移する
 document.querySelector("#resetSendButton_start").onclick = async (event) => {
     const response_reset = await fetch(
         "/reset",
@@ -21,6 +20,8 @@ document.querySelector("#resetSendButton_start").onclick = async (event) => {
     // POST /resetを実行
     // ページをリロードする
 };
+
+//しりとり画面にリセットした状態で遷移する
 document.querySelector("#resetSendButton_one").onclick = async (event) => {
     const response_reset = await fetch(
         "/reset",

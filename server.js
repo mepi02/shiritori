@@ -5,7 +5,7 @@ let previousWord = "しりとり";
 let wordHistories = [];
 wordHistories = wordHistories.concat(previousWord);
 
-let gameOver_messege;
+let gameOver_status;
 
 // localhostにDenoのHTTPサーバーを展開
 Deno.serve(async (_req) => {
@@ -17,11 +17,11 @@ Deno.serve(async (_req) => {
     if (_req.method === "GET" && pathname === "/shiritori") {
         return new Response(previousWord);
     }
-
-    if (_req.method === "GET" && pathname === "/gameOver_messege") {
-        if (gameOver_messege === 401) {
+    // GET /gameOver_status: 終わった理由を返す
+    if (_req.method === "GET" && pathname === "/gameOver_status") {
+        if (gameOver_status === 401) {
             return new Response("んがついてるよ");
-        } else if (gameOver_messege === 402) {
+        } else if (gameOver_status === 402) {
             return new Response("同じ文字が使用されています");
         }
     }
@@ -37,8 +37,9 @@ Deno.serve(async (_req) => {
         console.log(0 < wordHistories.indexOf(nextWord));
         console.log(wordHistories);
         if (previousWord.slice(-1) === nextWord.slice(0, 1)) {
+            //最後に「ん」が付いているか？
             if (nextWord.slice(-1) === "ん") {
-                gameOver_messege = 401;
+                gameOver_status = 401;
                 return new Response(
                     JSON.stringify({
                         "errorMessage": "最後がんになっています",
@@ -51,8 +52,9 @@ Deno.serve(async (_req) => {
                         },
                     },
                 );
-            } else if (0 < wordHistories.indexOf(nextWord)) {
-                gameOver_messege = 402;
+            } //同じ文字が使われているか？
+            else if (0 < wordHistories.indexOf(nextWord)) {
+                gameOver_status = 402;
                 return new Response(
                     JSON.stringify({
                         "errorMessage": "同じものを出しています",

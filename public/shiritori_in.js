@@ -1,3 +1,4 @@
+//前の単語を表示
 globalThis.onload = async (_event) => {
     // GET /shiritoriを実行
     const response = await fetch("/shiritori", { method: "GET" });
@@ -30,7 +31,6 @@ document.querySelector("#nextWordSendButton").onclick = async (_event) => {
     if (response.status !== 200) {
         const errorJson = await response.text();
         const errorObj = JSON.parse(errorJson);
-        alert(errorObj["errorMessage"]);
         if (response.status >= 401) {
             //ゲームオーバー
             globalThis.location.href = "gameOver.html";
@@ -48,7 +48,7 @@ document.querySelector("#nextWordSendButton").onclick = async (_event) => {
     wordHistories.push = previousWord;
 };
 
-// 送信ボタンの押下時に実行
+// リセット
 document.querySelector("#resetSendButton").onclick = async (event) => {
     const response_reset = await fetch(
         "/reset",
