@@ -1,3 +1,6 @@
+var Word_List = [];
+var Word_List_count = 0;
+
 //前の単語を表示
 globalThis.onload = async (_event) => {
     // GET /shiritoriを実行
@@ -8,6 +11,16 @@ globalThis.onload = async (_event) => {
     const paragraph = document.querySelector("#previousWord");
     // 取得したタグの中身を書き換える
     paragraph.innerHTML = `前の単語: ${previousWord}`;
+
+    const paragraph_01 = document.querySelector("#Word_log");
+    // 取得したタグの中身を書き換える
+    paragraph_01.innerHTML = `履歴`;
+
+    Word_List_count = 0;
+    Word_List = Word_List.concat(previousWord);
+    var Word_List_01 = document.createElement("li");
+    Word_List_01.textContent = Word_List[Word_List_count];
+    document.getElementById("Word_List").appendChild(Word_List_01);
 };
 
 // 送信ボタンの押下時に実行
@@ -29,11 +42,13 @@ document.querySelector("#nextWordSendButton").onclick = async (_event) => {
 
     // status: 200以外が返ってきた場合にエラーを表示
     if (response.status !== 200) {
-        const errorJson = await response.text();
-        const errorObj = JSON.parse(errorJson);
         if (response.status >= 401) {
             //ゲームオーバー
             globalThis.location.href = "gameOver.html";
+        } else if (response.status === 400) {
+            const errorJson = await response.text();
+            const errorObj = JSON.parse(errorJson);
+            alert(errorObj["errorMessage"]);
         }
     }
 
@@ -43,6 +58,13 @@ document.querySelector("#nextWordSendButton").onclick = async (_event) => {
     const paragraph = document.querySelector("#previousWord");
     // 取得したタグの中身を書き換える
     paragraph.innerHTML = `前の単語: ${previousWord}`;
+
+    Word_List_count += 1;
+    Word_List = Word_List.concat(previousWord);
+    var Word_List_01 = document.createElement("li");
+    Word_List_01.textContent = Word_List[Word_List_count];
+    document.getElementById("Word_List").appendChild(Word_List_01);
+
     // inputタグの中身を消去する
     nextWordInput.value = "";
     wordHistories.push = previousWord;

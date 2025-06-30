@@ -26,6 +26,10 @@ Deno.serve(async (_req) => {
         }
     }
 
+    if (_req.method === "GET" && pathname === "/wordList") {
+        return new Response(wordHistories);
+    }
+
     // POST /shiritori: 次の単語を受け取って保存する
     if (_req.method === "POST" && pathname === "/shiritori") {
         // リクエストのペイロードを取得
@@ -33,52 +37,67 @@ Deno.serve(async (_req) => {
         // JSONの中からnextWordを取得
         const nextWord = requestJson["nextWord"];
 
-        // previousWordの末尾とnextWordの先頭が同一か確認
-        console.log(0 < wordHistories.indexOf(nextWord));
-        console.log(wordHistories);
-        if (previousWord.slice(-1) === nextWord.slice(0, 1)) {
-            //最後に「ん」が付いているか？
-            if (nextWord.slice(-1) === "ん") {
-                gameOver_status = 401;
+        if (/^[ぁ-んー]*$/.test(nextWord)) {
+            if (previousWord.slice(-1) === nextWord.slice(0, 1)) {
+                //最後に「ん」が付いているか？
+                if (nextWord.slice(-1) === "ん") {
+                    gameOver_status = 401;
+                    return new Response(
+                        JSON.stringify({
+                            "errorMessage": "最後がんになっています",
+                            "errorCode": "10002",
+                        }),
+                        {
+                            status: 401,
+                            headers: {
+                                "Content-Type":
+                                    "application/json; charset=utf-8",
+                            },
+                        },
+                    );
+                } //同じ文字が使われているか？
+                else if (0 < wordHistories.indexOf(nextWord)) {
+                    gameOver_status = 402;
+                    return new Response(
+                        JSON.stringify({
+                            "errorMessage": "同じものを出しています",
+                            "errorCode": "10003",
+                        }),
+                        {
+                            status: 402,
+                            headers: {
+                                "Content-Type":
+                                    "application/json; charset=utf-8",
+                            },
+                        },
+                    );
+                } else {
+                    // 同一であれば、previousWordを更新
+                    wordHistories = wordHistories.concat(nextWord);
+                    previousWord = nextWord;
+                    console.log(wordHistories);
+                }
+            } // 同一でない単語の入力時に、エラーを返す
+            else {
                 return new Response(
                     JSON.stringify({
-                        "errorMessage": "最後がんになっています",
-                        "errorCode": "10002",
+                        "errorMessage": "前の単語に続いていません",
+                        "errorCode": "10001",
                     }),
                     {
-                        status: 401,
+                        status: 400,
                         headers: {
                             "Content-Type": "application/json; charset=utf-8",
                         },
                     },
                 );
-            } //同じ文字が使われているか？
-            else if (0 < wordHistories.indexOf(nextWord)) {
-                gameOver_status = 402;
-                return new Response(
-                    JSON.stringify({
-                        "errorMessage": "同じものを出しています",
-                        "errorCode": "10003",
-                    }),
-                    {
-                        status: 402,
-                        headers: {
-                            "Content-Type": "application/json; charset=utf-8",
-                        },
-                    },
-                );
-            } else {
-                // 同一であれば、previousWordを更新
-                wordHistories = wordHistories.concat(nextWord);
-                previousWord = nextWord;
-                console.log(wordHistories);
             }
-        } // 同一でない単語の入力時に、エラーを返す
-        else {
+        } else {
+            gameOver_status = 400;
             return new Response(
                 JSON.stringify({
-                    "errorMessage": "前の単語に続いていません",
-                    "errorCode": "10001",
+                    "errorMessage": "ひらがなで入力してください",
+                    "errorCode": "10004",
                 }),
                 {
                     status: 400,
