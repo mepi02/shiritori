@@ -21,6 +21,11 @@ globalThis.onload = async (_event) => {
     var Word_List_01 = document.createElement("li");
     Word_List_01.textContent = Word_List[Word_List_count];
     document.getElementById("Word_List").appendChild(Word_List_01);
+
+    const response_player = await fetch("/player", { method: "GET" });
+    const paragraph_player = document.querySelector("#player_space");
+    const player_name = await response_player.text();
+    paragraph_player.innerHTML = `現在のプレイヤーは${player_name}です。`;
 };
 
 // 送信ボタンの押下時に実行
@@ -64,6 +69,11 @@ document.querySelector("#nextWordSendButton").onclick = async (_event) => {
     var Word_List_01 = document.createElement("li");
     Word_List_01.textContent = Word_List[Word_List_count];
     document.getElementById("Word_List").appendChild(Word_List_01);
+
+    const response_player = await fetch("/player", { method: "GET" });
+    const paragraph_player = document.querySelector("#player_space");
+    const player_name = await response_player.text();
+    paragraph_player.innerHTML = `現在のプレイヤーは${player_name}です。`;
 
     // inputタグの中身を消去する
     nextWordInput.value = "";

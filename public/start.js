@@ -1,36 +1,14 @@
-//終わった理由を表示
-globalThis.onload = async (_event) => {
-    const paragraph = document.querySelector("#gameOver_reason");
-    const gameOver_status = await fetch("/gameOver_status", { method: "GET" });
-    const gameOver_Message = await gameOver_status.text();
-    // 取得したタグの中身を書き換える
-    paragraph.innerHTML = `${gameOver_Message}`;
-};
+document.querySelector("#gemaStart").onclick = async (_event) => {
+    const nextWordInput = document.querySelector("#player_nember");
+    const nextWordInputText = nextWordInput.value;
 
-//スタート画面にリセットした状態で遷移する
-document.querySelector("#resetSendButton_start").onclick = async (event) => {
-    const response_reset = await fetch(
-        "/reset",
+    const response = await fetch(
+        "/player_nember",
         {
             method: "POST",
+            body: JSON.stringify({ player_nember: nextWordInputText }),
         },
     );
-    globalThis.location.reload();
-    location.href = "./index.html";
-    // POST /resetを実行
-    // ページをリロードする
-};
 
-//しりとり画面にリセットした状態で遷移する
-document.querySelector("#resetSendButton_one").onclick = async (event) => {
-    const response_reset = await fetch(
-        "/reset",
-        {
-            method: "POST",
-        },
-    );
-    globalThis.location.reload();
-    location.href = "./main.html";
-    // POST /resetを実行
-    // ページをリロードする
+    globalThis.location.href = "main.html";
 };

@@ -3,8 +3,23 @@ import { serveDir } from "jsr:@std/http/file-server";
 // 直前の単語を保持しておく
 let previousWord = "しりとり";
 let wordHistories = [];
+let player_name = [
+    "player_A",
+    "player_B",
+    "player_C",
+    "player_D",
+    "player_E",
+    "player_F",
+    "player_G",
+    "player_H",
+    "player_I",
+    "player_J",
+];
+let player_number = 2;
 wordHistories = wordHistories.concat(previousWord);
-
+let player_count = 0;
+let player;
+let player_;
 let gameOver_status;
 
 // localhostにDenoのHTTPサーバーを展開
@@ -26,8 +41,40 @@ Deno.serve(async (_req) => {
         }
     }
 
+    if (_req.method === "GET" && pathname === "/gameOver_name") {
+        console.log(player_);
+        if (player_ - 1 < 0) {
+            player_ = player_number - 1;
+        } else {
+            player_ -= 1;
+        }
+        return new Response(player_name[player_]);
+    }
+
+    if (_req.method === "GET" && pathname === "/player") {
+        if (player_count < player_number) {}
+        else {
+            player_count = 0;
+        }
+        player_ = player_count;
+        player = player_name[player_count];
+        player_count += 1;
+        return new Response(player);
+    }
+
     if (_req.method === "GET" && pathname === "/wordList") {
         return new Response(wordHistories);
+    }
+
+    if (_req.method === "POST" && pathname === "/player_nember") {
+        // リクエストのペイロードを取得
+        const requestJson = await _req.json();
+        // JSONの中からnextWordを取得
+        const nextWord = requestJson["player_nember"];
+        console.log(nextWord);
+        player_number = nextWord;
+        console.log(player_number);
+        return new Response(JSON.stringify({}), {});
     }
 
     // POST /shiritori: 次の単語を受け取って保存する
@@ -118,6 +165,7 @@ Deno.serve(async (_req) => {
         wordHistories = [];
         previousWord = "しりとり";
         wordHistories = wordHistories.concat(previousWord);
+        player_count = 0;
         return wordHistories;
     }
 
