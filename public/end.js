@@ -1,10 +1,10 @@
 //終わった理由を表示
 globalThis.onload = async (_event) => {
-    const paragraph = document.querySelector("#gameOver_reason");
+    const paragraph_gameOver = document.querySelector("#gameOver_reason");
     const gameOver_status = await fetch("/gameOver_status", { method: "GET" });
     const gameOver_Message = await gameOver_status.text();
     // 取得したタグの中身を書き換える
-    paragraph.innerHTML = `${gameOver_Message}`;
+    paragraph_gameOver.innerHTML = `${gameOver_Message}`;
 
     const paragraph_name = document.querySelector("#gameOver_Name");
     const gameOver_name = await fetch("/gameOver_name", { method: "GET" });

@@ -2,8 +2,9 @@
 import { serveDir } from "jsr:@std/http/file-server";
 // 直前の単語を保持しておく
 let previousWord = "しりとり";
-let wordHistories = [];
-let player_name = [
+let wordHistories = []; //履歴を保存
+//プレイヤーの名前
+let player_nameList = [
     "player_A",
     "player_B",
     "player_C",
@@ -15,12 +16,12 @@ let player_name = [
     "player_I",
     "player_J",
 ];
-let player_number = 2;
+let player_number = 2; //プレイヤーの人数
 wordHistories = wordHistories.concat(previousWord);
-let player_count = 0;
-let player;
+let player_count = 0; //どのプレイヤーかを表す
+let player; //プレイヤーがだれか
 let player_;
-let gameOver_status;
+let gameOver_status; //エラーのステータスを受け取る
 
 // localhostにDenoのHTTPサーバーを展開
 Deno.serve(async (_req) => {
@@ -28,10 +29,12 @@ Deno.serve(async (_req) => {
     // http://localhost:8000/hoge に接続した場合"/hoge"が取得できる
     const pathname = new URL(_req.url).pathname;
     console.log(`pathname: ${pathname}`);
+
     // GET /shiritori: 直前の単語を返す
     if (_req.method === "GET" && pathname === "/shiritori") {
         return new Response(previousWord);
     }
+
     // GET /gameOver_status: 終わった理由を返す
     if (_req.method === "GET" && pathname === "/gameOver_status") {
         if (gameOver_status === 401) {
@@ -41,6 +44,7 @@ Deno.serve(async (_req) => {
         }
     }
 
+    // GET /gameOver_name: 誰で終わったかを返す
     if (_req.method === "GET" && pathname === "/gameOver_name") {
         console.log(player_);
         if (player_ - 1 < 0) {
@@ -48,31 +52,43 @@ Deno.serve(async (_req) => {
         } else {
             player_ -= 1;
         }
-        return new Response(player_name[player_]);
+        player = player_nameList[player_];
+        return new Response(player);
     }
 
+    // GET /gameOver_name: 今のプレイヤーの名前を返す
     if (_req.method === "GET" && pathname === "/player") {
         if (player_count < player_number) {}
         else {
             player_count = 0;
         }
         player_ = player_count;
-        player = player_name[player_count];
+        player = player_nameList[player_count];
         player_count += 1;
         return new Response(player);
     }
 
+    // GET /wordList: 履歴を返す
     if (_req.method === "GET" && pathname === "/wordList") {
         return new Response(wordHistories);
     }
 
-    if (_req.method === "POST" && pathname === "/player_nember") {
+    // GET /wordList: 人数を返す
+    if (_req.method === "GET" && pathname === "/setting_Player_nember") {
+        return new Response(player_number);
+    }
+
+    //人数設定
+    if (_req.method === "POST" && pathname === "/player_setting") {
         // リクエストのペイロードを取得
         const requestJson = await _req.json();
-        // JSONの中からnextWordを取得
-        const nextWord = requestJson["player_nember"];
-        console.log(nextWord);
-        player_number = nextWord;
+
+        const nember = requestJson["count"];
+        let entries = requestJson["entries"];
+        for (let i = 0; i < nember; i++) {
+            player_nameList[i] = entries[i];
+        }
+        player_number = nember;
         console.log(player_number);
         return new Response(JSON.stringify({}), {});
     }
@@ -84,6 +100,7 @@ Deno.serve(async (_req) => {
         // JSONの中からnextWordを取得
         const nextWord = requestJson["nextWord"];
 
+        //ひらがなのみか？
         if (/^[ぁ-んー]*$/.test(nextWord)) {
             if (previousWord.slice(-1) === nextWord.slice(0, 1)) {
                 //最後に「ん」が付いているか？

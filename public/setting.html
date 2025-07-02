@@ -3,35 +3,21 @@
 
 <head>
   <!-- headタグの中にはメタデータ等を記載する -->
-  <link rel="stylesheet" href="sett.css">
+  <link rel="stylesheet" href="styles.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <meta http-equiv="Cache-Control" content="no-store">
+  <style src="styles_setting.css"></style>
 </head>
 
 <body>
-  <div id="input_pluralBox">
-    <div id="input_plural">
-      <input type="text" class="form-control" placeholder="player_A">
-      <input type="button" value="＋" class="add pluralBtn">
-      <input type="button" value="－" class="del pluralBtn">
-    </div>
-  </div>
-  <div id="input_pluralBox">
-    <div id="input_plural">
-      <input type="text" class="form-control" placeholder="player_A">
-      <input type="button" value="＋" class="add pluralBtn">
-      <input type="button" value="－" class="del pluralBtn">
-    </div>
-  </div>
+  <input type="number" value="2" min="2" max="10" step="1" id="player_nember">
 
-  <button id="playerNameSendButton">送信</button>
+  <div id="inputs"></div>
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
-  <script type="text/javascript" src="set.js"></script>
-
+  <button id="setting_ok">決定</button>
+  <script src="shiritori_setting.js"></script>
 </body>
 
 </html>
