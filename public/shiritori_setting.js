@@ -11,8 +11,9 @@ function updateInputs(count) {
             const input = document.createElement("input");
             input.type = "text";
             input.className = "input-field";
-            input.placeholder = `入力欄 #${i + 1}`;
+            input.placeholder = `player #${i + 1}`;
             inputs.appendChild(input);
+            inputs.appendChild(document.createElement("p"));
         }
     } else if (count < currentCount) {
         // 減らす

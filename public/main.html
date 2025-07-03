@@ -4,6 +4,7 @@
 <head>
   <!-- headタグの中にはメタデータ等を記載する -->
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles_shiritori.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
@@ -11,23 +12,24 @@
 </head>
 
 <body>
-  <!-- bodyタグの中には実際に表示するものなどを書く -->
-  <h1>しりとり</h1>
-  <p id="player_space"></p>
-  <!-- 現在の単語を表示する場所 -->
-  <p id="previousWord"></p>
+  <center>
+    <!-- bodyタグの中には実際に表示するものなどを書く -->
+    <p id="player_space"></p>
+    <!-- 現在の単語を表示する場所 -->
+    <p id="previousWord"></p>
 
-  <!-- 次の文字を入力するフォーム -->
-  <input id="nextWordInput" type="text" />
-  <button id="nextWordSendButton">送信</button>
-  <button id="resetSendButton">リセット</button>
+    <!-- 次の文字を入力するフォーム -->
+    <input id="nextWordInput" type="text" />
+    <p></p>
+    <button id="nextWordSendButton">単語を送信</button>
+    <button id="resetSendButton">ゲームリセット</button>
+    <p id="Word_log"></p>
+    <ul id="Word_List"></ul>
 
+    <!-- JavaScriptを実行 -->
+    <script src="shiritori_in.js"></script>
+  </center>
 
-  <p id="Word_log"></p>
-  <ul id="Word_List"></ul>
-
-  <!-- JavaScriptを実行 -->
-  <script src="shiritori_in.js"></script>
 </body>
 
 </html>

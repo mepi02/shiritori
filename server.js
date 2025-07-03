@@ -38,9 +38,9 @@ Deno.serve(async (_req) => {
     // GET /gameOver_status: 終わった理由を返す
     if (_req.method === "GET" && pathname === "/gameOver_status") {
         if (gameOver_status === 401) {
-            return new Response("んがついてるよ");
+            return new Response("最後にんが付いています");
         } else if (gameOver_status === 402) {
-            return new Response("同じ文字が使用されています");
+            return new Response("その単語は使用されています");
         }
     }
 
@@ -66,11 +66,6 @@ Deno.serve(async (_req) => {
         player = player_nameList[player_count];
         player_count += 1;
         return new Response(player);
-    }
-
-    // GET /wordList: 履歴を返す
-    if (_req.method === "GET" && pathname === "/wordList") {
-        return new Response(wordHistories);
     }
 
     // GET /wordList: 人数を返す

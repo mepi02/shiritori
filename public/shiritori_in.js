@@ -19,7 +19,8 @@ globalThis.onload = async (_event) => {
     Word_List_count = 0;
     Word_List = Word_List.concat(previousWord);
     var Word_List_01 = document.createElement("li");
-    Word_List_01.textContent = Word_List[Word_List_count];
+    Word_List_01.textContent = (Word_List_count + 1) + ":" +
+        Word_List[Word_List_count];
     document.getElementById("Word_List").appendChild(Word_List_01);
 
     const response_player = await fetch("/player", { method: "GET" });
@@ -67,7 +68,8 @@ document.querySelector("#nextWordSendButton").onclick = async (_event) => {
     Word_List_count += 1;
     Word_List = Word_List.concat(previousWord);
     var Word_List_01 = document.createElement("li");
-    Word_List_01.textContent = Word_List[Word_List_count];
+    Word_List_01.textContent = (Word_List_count + 1) + ":" +
+        Word_List[Word_List_count];
     document.getElementById("Word_List").appendChild(Word_List_01);
 
     const response_player = await fetch("/player", { method: "GET" });
@@ -82,13 +84,16 @@ document.querySelector("#nextWordSendButton").onclick = async (_event) => {
 
 // リセット
 document.querySelector("#resetSendButton").onclick = async (event) => {
-    const response_reset = await fetch(
-        "/reset",
-        {
-            method: "POST",
-        },
-    );
-    globalThis.location.reload();
-    // POST /resetを実行
-    // ページをリロードする
+    if (globalThis.confirm("リセットしてもよろしいですか？")) {
+        await fetch(
+            "/reset",
+            {
+                method: "POST",
+            },
+        );
+        globalThis.location.reload();
+    } else { // 「キャンセル」時の処理
+        globalThis.alert("キャンセルされました"); // 警告ダイアログを表示
+        return false; // リセットを中止
+    }
 };
