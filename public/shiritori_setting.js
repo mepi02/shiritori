@@ -19,6 +19,7 @@ function updateInputs(count) {
         // 減らす
         for (let i = currentCount; i > count; i--) {
             inputs.removeChild(inputs.lastElementChild);
+            inputs.removeChild(inputs.lastElementChild);
         }
     }
     // 同じなら何もしない
