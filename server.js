@@ -1,6 +1,6 @@
 // server.js
 import { serveDir } from "jsr:@std/http/file-server";
-// 直前の単語を保持しておく
+//    直前の単語を保持しておく
 let previousWord = "しりとり";
 let wordHistories = []; //履歴を保存
 //プレイヤーの名前
